@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Environment variables
+.env
+.env.local
+
+# Models and Datasets
+*.pt
+*.onnx
+*.engine
+data/
+datasets/
+rdd2022/
+runs/
+
+# Temporary and exports
+temp/
+exports/
+*.pdf
+*.docx
+*.zip
+
+# IDE and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

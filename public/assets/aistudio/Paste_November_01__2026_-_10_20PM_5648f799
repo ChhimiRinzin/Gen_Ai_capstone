@@ -1,0 +1,1205 @@
+# FINAL MASTER PROMPT — ROADSENTRY AI
+## Build a World-Class Multimodal Road Safety, Hazard Detection & Infrastructure Audit Intelligence Platform for Bhutan
+
+### YOUR ROLE
+
+Act as an elite international software development and AI research team consisting of:
+
+- Principal AI Architect
+- Machine Learning Engineer
+- Deep Learning Specialist
+- YOLO Computer Vision Engineer
+- Multimodal AI Researcher
+- Generative AI and Groq Integration Engineer
+- Infrastructure and Performance Audit Specialist
+- GIS and Geospatial Developer
+- Senior Python Full-Stack Developer
+- UI/UX Designer
+- MLOps Engineer
+- Cybersecurity Engineer
+- Software Testing and Quality Assurance Engineer
+
+Your mission is to design, implement, integrate, test, and document a sophisticated, production-quality prototype named **RoadSentry AI**.
+
+The project is being developed as a capstone for the international training programme **"Generative AI Systems: From Research to Real-World Deployment" at C-DAC Mohali, India**.
+
+The application will be demonstrated to international participants, trainers, researchers, and professionals.
+
+The intended beneficiary country is the **Kingdom of Bhutan**.
+
+The final application must be visually impressive, technically credible, genuinely functional, and realistic for eventual adaptation by Bhutanese road authorities and public-sector auditors.
+
+**CRITICAL: Do not build a static mockup, fictional dashboard, or simulation. Implement actual working AI functionality.**
+
+---
+
+# 1. PROJECT IDENTITY
+
+Application name: **RoadSentry AI**
+
+Tagline: **Intelligent Road Safety & Infrastructure Audit Intelligence**
+
+Country focus: Bhutan
+
+Application type: Multimodal AI-powered road hazard detection, inspection, risk analysis, and infrastructure auditing system.
+
+Primary objective:
+
+Develop a unified intelligent platform that can analyze road photographs, road videos, inspection documents, and auditor-supplied information to identify potential road defects, assess risks, generate explainable findings, and support evidence-based road maintenance and public infrastructure audits.
+
+The application must demonstrate the practical integration of:
+
+1. Artificial Intelligence
+2. Machine Learning
+3. Deep Learning
+4. YOLO Object Detection
+5. Computer Vision
+6. Multimodal AI
+7. Generative AI
+8. Natural Language Processing
+9. GIS and Geospatial Visualization
+10. Explainable AI
+
+Every technology must serve a genuine functional purpose.
+
+Do not create superficial features merely to claim that a particular technology has been used.
+
+---
+
+# 2. CORE DESIGN PRINCIPLES
+
+The application must follow these principles:
+
+- Real AI inference
+- Explainable predictions
+- Evidence-based analysis
+- Human-in-the-loop auditing
+- Bhutan-specific context
+- Professional international-standard interface
+- CPU-compatible operation
+- Free and open-source technologies where legally permitted
+- Secure handling of API keys
+- No persistent application database
+- No separate demonstration mode
+- No fake incident records
+- No fabricated detection results
+- No invented machine learning metrics
+- No hardcoded misleading statistics
+- No unsupported legal or regulatory conclusions
+- No unnecessary external infrastructure
+- Downloadable reports and evidence packages
+- Robust error handling
+- Modular and maintainable code
+
+This is an **AI-assisted decision-support application**, not an autonomous safety certification or audit opinion system.
+
+---
+
+# 3. DEVELOPMENT ENVIRONMENT AND TECHNOLOGY STACK
+
+The final source code must be fully compatible with **GitHub Codespaces**.
+
+Use:
+
+### Programming language
+Python 3.11, or another verified version compatible with all dependencies.
+
+### Frontend
+- Streamlit
+- Custom CSS
+- Plotly
+- Folium or an appropriate free geospatial mapping library
+- Streamlit-native interactive components
+
+### Computer Vision
+- OpenCV
+- Ultralytics YOLO
+- Pillow
+- NumPy
+
+### Deep Learning
+- PyTorch
+- Appropriate pretrained or custom-trained neural networks
+
+### Machine Learning
+- scikit-learn
+- Pandas
+- Joblib for trained model artifacts
+- Interpretable algorithms such as Random Forest
+
+### Generative and Multimodal AI
+- Official Groq Python SDK
+- Currently supported Groq text models
+- Currently supported Groq vision models
+- Structured JSON output validation
+
+### Document Processing
+- PyMuPDF or an appropriate PDF text extraction library
+- python-docx
+- openpyxl or Pandas for Excel input
+- Appropriate text-processing utilities
+
+### Report Generation
+- ReportLab for PDF generation
+- python-docx for editable reports
+- Pandas for CSV export
+- Python JSON utilities
+
+### Configuration
+- python-dotenv
+- Environment variables
+- .env.example
+- Streamlit secrets where appropriate
+
+### Testing
+- pytest
+- Unit tests
+- Integration tests
+- Error-handling tests
+
+### Deployment
+- GitHub Codespaces
+- Streamlit development server
+- Optional deployment guidance for compatible free hosting
+
+Avoid complex microservices, unnecessary containers, or paid cloud resources unless justified.
+
+Make the initial application run without requiring a GPU.
+
+---
+
+# 4. ABSOLUTELY NO DATABASE
+
+Do not use:
+
+- SQLite
+- PostgreSQL
+- MySQL
+- MongoDB
+- Firebase
+- Supabase
+- Persistent incident databases
+
+The application must operate using **session-based data processing**.
+
+Use Streamlit's `st.session_state` to maintain:
+
+- Uploaded images
+- Uploaded videos
+- Uploaded audit documents
+- Road inspection records
+- YOLO detections
+- Computer vision results
+- Machine learning scores
+- Multimodal analysis
+- Auditor observations
+- Draft audit findings
+- Generated reports
+- Map coordinates
+- Analytics
+- AI assistant conversation
+
+Allow users to process multiple files within one session.
+
+Provide session controls to:
+
+- Add inspection
+- Remove inspection
+- Reanalyze evidence
+- Clear current session
+- Download individual results
+- Export all current session results
+
+Use temporary files only when necessary for image/video processing and document generation.
+
+Clean up temporary files when feasible.
+
+Do not intentionally persist user inspection information across sessions.
+
+Explain that server infrastructure, framework caching, logs, and external API providers may have their own data handling characteristics.
+
+AI model weights, application source files, and publicly licensed reference datasets may remain on disk.
+
+---
+
+# 5. NO SEPARATE DEMONSTRATION MODE
+
+I will demonstrate the actual application directly to international participants.
+
+Do not create:
+- Fake sample incidents
+- A simulated AI inference screen
+- A separate demonstration dashboard
+- Hardcoded output values
+- Pretend model predictions
+
+Every live detection must originate from actual model inference.
+
+Every chart must be based on actual current-session data.
+
+An empty session should display polished empty states and clear upload instructions.
+
+If a model is missing, show its genuine status and appropriate instructions rather than fabricating output.
+
+---
+
+# 6. BHUTAN-SPECIFIC APPLICATION
+
+Design the platform for the road infrastructure challenges of Bhutan.
+
+Relevant conditions include:
+
+- Mountain highways
+- Narrow winding roads
+- Potholes
+- Asphalt cracking
+- Roadside debris
+- Rockfall and landslide debris
+- Surface water accumulation
+- Road drainage concerns
+- Pavement deterioration
+- Damaged road infrastructure
+- Road visibility concerns
+
+Only classify a hazard as a model-confirmed detection when the active trained detector actually supports that hazard category.
+
+Provide:
+- A Bhutan-centered map
+- Accurate list of Bhutan's 20 Dzongkhags
+- Dzongkhag selection
+- Road category selection
+- Optional locality and Gewog information
+- User-entered GPS coordinates
+- Optional coordinate selection using an interactive map
+- Incident marker visualization for current-session records
+
+Support major Bhutanese road locations and regions without inventing actual incidents.
+
+Use English as the initial interface language, with future extensibility for Dzongkha.
+
+Do not assume an uploaded image was taken in Bhutan unless location metadata or the user establishes it.
+
+Do not generate geographic coordinates using guesses from image appearance.
+
+---
+
+# 7. REAL YOLO ROAD DAMAGE DETECTION
+
+This is one of the most important components.
+
+Implement genuine YOLO inference.
+
+The preferred road damage categories are:
+
+- D00 — Longitudinal crack
+- D10 — Transverse crack
+- D20 — Alligator crack
+- D40 — Pothole
+
+Use a verified, compatible road damage model or train a custom YOLO model using RDD2022.
+
+Primary dataset:
+
+Road Damage Dataset 2022 (RDD2022)
+
+Official repository:
+https://github.com/sekilab/RoadDamageDetector
+
+Dataset information:
+https://crddc2022.sekilab.global/data/
+
+Use official dataset annotations and clearly document their licensing requirements.
+
+Additional reference:
+
+BDD100K:
+https://github.com/bdd100k/bdd100k
+
+Use BDD100K only for suitable supported driving-scene tasks. Do not incorrectly claim that BDD100K provides the same road damage classes as RDD2022.
+
+### Detection requirements
+
+- Upload JPG, JPEG, PNG and WEBP images
+- Load compatible YOLO weights
+- Perform actual image inference
+- Show bounding boxes
+- Show class labels
+- Show confidence scores
+- Count detections by class
+- Provide a confidence threshold slider
+- Display original and annotated image
+- Export detection data to JSON or CSV
+- Download annotated image
+- Show model version and class definitions
+- Report inference processing time
+
+Cache model weights appropriately.
+
+If specialized road damage weights are unavailable, do not substitute generic object-detection weights while falsely labeling their outputs as cracks or potholes.
+
+Instead, preserve a working generic detector only if clearly labeled, and provide the specialized training/integration workflow.
+
+Ensure that model labels match the trained model's actual class order.
+
+---
+
+# 8. FREE DATASET ACQUISITION AND CUSTOM TRAINING
+
+Provide real scripts and documentation for downloading, preparing, and training on publicly available datasets.
+
+Use RDD2022 as the primary source.
+
+Develop:
+
+- Dataset download instructions
+- Optional verified download script
+- XML-to-YOLO annotation conversion
+- Class mapping validation
+- Dataset integrity checks
+- Train/validation/test splitting
+- Data augmentation
+- YOLO dataset YAML creation
+- Training script
+- Model evaluation script
+- Model export
+- Weight loading
+
+Provide a CPU-friendly training subset for initial experimentation.
+
+Do not automatically download huge datasets when the Streamlit application starts.
+
+Explain how the project could later be improved using road images collected in Bhutan with appropriate permissions.
+
+For any supplementary landslide, debris, or damaged-guardrail dataset, verify:
+- The download source
+- Dataset availability
+- Annotation compatibility
+- Label definitions
+- Licensing permissions
+
+Do not claim a trained detection category exists before suitable weights are available.
+
+---
+
+# 9. COMPUTER VISION MODULE
+
+Implement genuine computer vision processing.
+
+Include:
+
+- Image resizing
+- Image normalization
+- Blur detection
+- Brightness analysis
+- Contrast analysis
+- Edge visualization
+- Image enhancement
+- Image quality assessment
+- Detection overlays
+- Image cropping around detections
+- Frame extraction from videos
+
+Provide useful before/after visual comparisons.
+
+Use OpenCV for appropriate deterministic image-processing functions.
+
+Distinguish traditional computer vision operations from deep learning model inference.
+
+---
+
+# 10. VIDEO ROAD INSPECTION
+
+Support uploaded MP4 video files.
+
+Implement:
+
+- Video validation
+- File size limits
+- Configurable frame sampling
+- YOLO analysis of sampled frames
+- Frame-specific timestamps
+- Detection summaries
+- Annotated frame preview
+- Optional annotated video export
+- Processing progress indication
+- CPU-friendly processing limits
+
+Avoid counting the same stationary hazard repeatedly as separate unique incidents unless deduplication is supported.
+
+Explain the limitations of video-based counting without vehicle localization or tracking.
+
+---
+
+# 11. MACHINE LEARNING RISK ASSESSMENT
+
+Create an explainable road hazard risk prioritization module.
+
+The intended risk categories are:
+
+- Critical
+- High
+- Medium
+- Low
+
+Potential inputs:
+
+- Road damage type
+- Detection confidence
+- Number of visible damage regions
+- Relative image area occupied by detections
+- Road classification provided by user
+- Auditor-defined context
+- Available inspection metadata
+- Verified maintenance-related factors
+
+Start with a transparent, configurable rules-based scoring system if genuinely labeled maintenance-priority training data is not available.
+
+If suitable labeled training data is available, implement a separate supervised ML model using scikit-learn.
+
+Include:
+- Training pipeline
+- Feature validation
+- Train/test split
+- Confusion matrix
+- Precision
+- Recall
+- F1 score
+- Feature importance
+
+Do not fabricate labels, model scores, or performance metrics.
+
+Do not claim that a model has been trained if the application only uses heuristic scoring.
+
+Do not infer exact pothole depth, structural integrity, real-world dimensions, or accident probability from an uncalibrated image.
+
+Explain why each priority level was assigned.
+
+---
+
+# 12. GROQ API INTEGRATION
+
+Use the official Groq Python SDK.
+
+Required environment variables:
+
+GROQ_API_KEY
+GROQ_TEXT_MODEL
+GROQ_VISION_MODEL
+
+Verify the latest available and supported model IDs before selecting defaults.
+
+Do not rely on outdated or retired model identifiers.
+
+Use Groq for:
+
+1. Road condition interpretation
+2. Multimodal image analysis
+3. Hazard investigation summaries
+4. Audit document interpretation
+5. Audit criteria comparison
+6. Evidence-based recommendations
+7. Draft audit findings
+8. Natural-language questions and answers
+9. Professional report writing
+
+Where supported, use a vision-capable Groq model to analyze uploaded images.
+
+Combine visual analysis with real YOLO detections rather than relying only on an LLM.
+
+### Grounding rules
+
+Every generated report must distinguish:
+
+- YOLO-confirmed detections
+- Multimodal AI observations
+- Auditor-entered information
+- ML or rule-based estimates
+- Missing information
+- Recommendations requiring verification
+
+The LLM must never invent:
+- YOLO detections
+- Laws or regulations
+- Engineering standards
+- Contract requirements
+- GPS coordinates
+- Road maintenance records
+- Financial losses
+- Contractor names
+- Inspection dates
+- Physical road measurements
+
+Implement:
+- API timeouts
+- Limited retries
+- Rate limit handling
+- Response validation
+- JSON parsing safeguards
+- Meaningful error messages
+- Fallback reports
+- Token/request usage display where available
+
+Ensure that the basic road detection functionality works even when no Groq API key is supplied.
+
+Provide an explicit approval control before sensitive images or audit documents are sent to Groq.
+
+---
+
+# 13. INFRASTRUCTURE AUDIT INTELLIGENCE
+
+This is a major feature of the application.
+
+The system must assist professional auditors, including public-sector performance and compliance auditors.
+
+The application should support road infrastructure audits in Bhutan, including the type of analysis that may be relevant to the Royal Audit Authority and other authorized auditing institutions.
+
+Do not imply institutional endorsement or official certification.
+
+### A. Audit Evidence Upload
+
+Allow auditors to upload:
+
+- Road inspection photographs
+- Road inspection videos
+- PDF standards and specifications
+- Contract documents
+- Maintenance schedules
+- Inspection reports
+- CSV and Excel records
+- Auditor notes
+
+Extract usable text and metadata.
+
+Handle scanned PDFs honestly: if OCR is unavailable, explain that image-only pages may require OCR.
+
+Do not silently omit unsupported document content.
+
+### B. AI Audit Criteria Analysis
+
+Extract applicable criteria from user-provided documents.
+
+Display:
+- Document name
+- Criterion text or summary
+- Relevant clause or page reference
+- Evidence supporting the interpretation
+- Any uncertainty
+
+Use accurate citations to uploaded documents.
+
+Do not invent contractual clauses.
+
+### C. Evidence vs Criteria Comparison
+
+Build an interface that allows auditors to compare:
+
+- What should be happening
+- What was observed
+- What supporting evidence exists
+- What information is missing
+- What potential discrepancy may exist
+- What further verification is needed
+
+Use YOLO results only for the visual conditions they actually support.
+
+Do not treat a photographed road defect as automatic proof of maintenance negligence, contract violation, or financial irregularity.
+
+### D. 5C Audit Finding Generator
+
+Use the five-component audit finding framework:
+
+**1. Criteria**
+What applicable requirement or standard should have been met?
+
+**2. Condition**
+What does the verified available evidence show?
+
+**3. Cause**
+What might explain the deviation, if sufficiently supported?
+
+**4. Consequence or Effect**
+What risks or impacts may result?
+
+**5. Corrective Action or Recommendation**
+What remedial action may be appropriate?
+
+If information is unavailable, explicitly write:
+"Not established — requires auditor verification."
+
+AI-generated findings must be editable.
+
+Each finding must display:
+- Finding title
+- Relevant evidence IDs
+- Audit criterion reference
+- Preliminary severity
+- Verification status
+- Auditor comments
+
+### E. Human Auditor Review
+
+Implement:
+- Confirm observation
+- Edit observation
+- Mark unverified
+- Exclude finding
+- Add auditor notes
+- Review supporting evidence
+- Generate revised draft
+- Export reviewed findings
+
+Do not automatically claim that an AI observation is a confirmed audit finding.
+
+### F. Audit Risk Prioritization
+
+Assist auditors in deciding which inspection observations deserve additional examination.
+
+Support explainable risk factors, including:
+- Visible damage severity
+- Repeated defect observations
+- Potential road safety consequence
+- Importance of the road when supplied
+- Available maintenance history
+- Auditor-specified concerns
+- Missing evidence
+
+Avoid unsupported conclusions about financial materiality, corruption, engineering compliance, or structural safety.
+
+### G. Professional Audit Report
+
+Generate draft audit reports containing:
+
+- Audit subject
+- Audit objective
+- Scope
+- Audit criteria
+- Evidence reviewed
+- Road observations
+- YOLO detection evidence
+- Risk evaluation
+- Preliminary findings
+- Cause assessment, where supported
+- Consequence
+- Recommendations
+- Evidence gaps
+- Auditor comments
+- Limitations
+- Verification status
+
+Label every report:
+
+"AI-Assisted Draft Audit Report — Subject to Professional Auditor Review."
+
+---
+
+# 14. SESSION-BASED AI ASSISTANT
+
+Include an interactive Groq-powered AI assistant.
+
+The assistant should answer questions using the current session's available information.
+
+Examples:
+- What types of road damage were detected?
+- Which observation appears most urgent?
+- What evidence supports this finding?
+- What additional documents should the auditor review?
+- Which uploaded standard is relevant?
+- Draft a concise audit observation.
+- Explain the YOLO confidence score.
+- Summarize the current inspection results.
+
+Use relevant session evidence and extracted document content as context.
+
+Distinguish grounded responses from general model knowledge.
+
+Do not claim that a session document supports an answer unless the supporting content is available.
+
+---
+
+# 15. BHUTAN INTERACTIVE HAZARD MAP
+
+Create a professional interactive GIS map.
+
+Requirements:
+- Bhutan-centered default map
+- Accurate Dzongkhag selection
+- Manually entered GPS coordinates
+- Optional location selection on a map
+- Current-session incident markers
+- Hazard category filters
+- Severity filters
+- Inspection detail popups
+
+Do not invent GPS locations.
+
+Only create incident markers when valid coordinates are available.
+
+Do not use fake historical road incident data.
+
+If the user uploads multiple images with coordinates, show those inspections on the map.
+
+Use free map tiles and document external connectivity requirements.
+
+---
+
+# 16. PROFESSIONAL DASHBOARD DESIGN
+
+The application must feel like a premium professional software platform, not a basic classroom Streamlit assignment.
+
+Visual identity:
+
+- Deep navy background
+- Charcoal/graphite surfaces
+- Teal and electric-blue accents
+- Clear, legible typography
+- Professional icons
+- Refined spacing
+- Responsive layouts
+- Elegant metric cards
+- Interactive Plotly charts
+- Organized navigation
+- Accessible color contrast
+
+Use restrained visual design.
+
+Avoid excessive animations, unnecessary decorative effects, and crowded dashboards.
+
+Provide a clear application identity with the name:
+
+**RoadSentry AI**
+
+Subtitle:
+
+**Intelligent Road Safety & Infrastructure Audit Intelligence for Bhutan**
+
+---
+
+# 17. REQUIRED APPLICATION PAGES
+
+## Page 1 — Command Center
+
+Include:
+- Session inspection count
+- Uploaded evidence count
+- Real detection count
+- Road damage distribution
+- Current-session risk summary
+- Model availability
+- Groq connectivity status
+- Recent session actions
+
+Display empty states when no inspections are available.
+
+## Page 2 — AI Road Inspector
+
+Include:
+- Image uploader
+- Video uploader
+- Image quality analysis
+- Real YOLO detection
+- Annotated output
+- Detection confidence
+- Risk assessment
+- Optional Groq analysis
+- Save to current session
+- Export results
+
+## Page 3 — Infrastructure Audit
+
+Include:
+- Audit document upload
+- Extracted audit criteria
+- Evidence index
+- Criteria-versus-condition analysis
+- Draft 5C findings
+- Human verification controls
+- Auditor notes
+
+## Page 4 — Bhutan Hazard Map
+
+Include:
+- Interactive map
+- Current-session inspection locations
+- Dzongkhag filter
+- Hazard filter
+- Risk filter
+- Evidence details
+
+## Page 5 — AI Analytics
+
+Include:
+- Road damage distribution
+- Detection confidence statistics
+- Session inspection trends
+- Risk category distribution
+- Model performance metrics when actually evaluated
+- Evidence statistics
+
+## Page 6 — AI Reports
+
+Include:
+- Road inspection report
+- Draft infrastructure audit report
+- Evidence summary
+- Maintenance recommendations
+- PDF export
+- DOCX export
+- JSON export
+- CSV export
+- Complete session evidence export
+
+## Page 7 — AI Assistant
+
+Include:
+- Conversational interface
+- Groq text model integration
+- Context from active session
+- Grounded evidence-based answers
+- Suggested follow-up questions
+
+## Page 8 — Model Lab
+
+Include:
+- Active YOLO model details
+- Supported detection classes
+- Dataset credits
+- Training instructions
+- Model evaluation
+- Inference metrics
+- Model limitations
+
+## Page 9 — Settings & About
+
+Include:
+- API status
+- Model configuration
+- Confidence thresholds
+- Processing limits
+- Session privacy information
+- Responsible AI statement
+- System architecture
+- Project and training information
+
+---
+
+# 18. REPORT GENERATION
+
+Reports must be professionally formatted and suitable for review by engineers or auditors.
+
+Use clear headings, tables, evidence references, and annotated images.
+
+Include appropriate limitations and disclaimers.
+
+Support:
+- PDF
+- DOCX
+- JSON
+- CSV where applicable
+
+Generate all report files from the current session only.
+
+Do not save reports to a persistent incident database.
+
+---
+
+# 19. SECURITY AND RESPONSIBLE AI
+
+Implement:
+
+- Secure API-key handling
+- File-type validation
+- File size limits
+- Safe temporary file handling
+- Restricted filesystem access
+- Input validation
+- Appropriate session isolation
+- Controlled external API transmission
+- Explicit consent before sending sensitive content
+- No secret logging
+- No fabricated outputs
+- Clear model limitations
+- Human review controls
+- Dataset licensing documentation
+
+The system must not present AI-generated text as a verified professional audit conclusion.
+
+---
+
+# 20. PROJECT STRUCTURE
+
+Use a modular structure similar to:
+
+roadsentry-ai/
+- app.py
+- requirements.txt
+- .env.example
+- .gitignore
+- README.md
+- .devcontainer/
+  - devcontainer.json
+- config/
+  - settings.py
+  - bhutan.py
+- core/
+  - session_manager.py
+  - file_validator.py
+  - exceptions.py
+- services/
+  - yolo_detector.py
+  - image_processor.py
+  - video_processor.py
+  - risk_assessor.py
+  - ml_predictor.py
+  - groq_service.py
+  - document_processor.py
+  - audit_analyzer.py
+  - evidence_manager.py
+  - report_generator.py
+  - mapping_service.py
+- pages/
+  - command_center.py
+  - road_inspector.py
+  - infrastructure_audit.py
+  - hazard_map.py
+  - analytics.py
+  - reports.py
+  - ai_assistant.py
+  - model_lab.py
+  - settings.py
+- components/
+  - sidebar.py
+  - metrics.py
+  - charts.py
+  - ui_styles.py
+- training/
+  - download_dataset.py
+  - prepare_dataset.py
+  - train_yolo.py
+  - evaluate_yolo.py
+- models/
+  - README.md
+- tests/
+  - test_detection.py
+  - test_session.py
+  - test_risk.py
+  - test_audit.py
+  - test_reports.py
+  - test_groq.py
+- docs/
+  - ARCHITECTURE.md
+  - MODEL_CARD.md
+  - DATASET_SOURCES.md
+  - AUDIT_WORKFLOW.md
+  - INSTALLATION.md
+  - PRESENTATION_GUIDE.md
+
+You may refine the structure if there is a sound engineering reason.
+
+Ensure all imports and application navigation are compatible with the chosen Streamlit version.
+
+---
+
+# 21. INTERNATIONAL PRESENTATION READINESS
+
+This project will be presented to international participants.
+
+Ensure that a presenter can demonstrate the real application using the following workflow:
+
+1. Open RoadSentry AI.
+2. Show the system dashboard.
+3. Upload a road inspection image.
+4. Run real YOLO detection.
+5. Display detected defects and confidence scores.
+6. Show the annotated image.
+7. Explain the risk assessment.
+8. Use Groq to generate a multimodal road condition analysis.
+9. Switch to Infrastructure Audit.
+10. Upload a relevant technical specification or maintenance document.
+11. Compare observed conditions against provided audit criteria.
+12. Generate a draft 5C audit finding.
+13. Review and edit the finding.
+14. Generate a professional downloadable report.
+15. Optionally display the inspection on the Bhutan map when coordinates are available.
+
+The full journey must work using the actual application, without a fake demonstration mode.
+
+Create a 5-minute presentation guide that explains:
+
+- The problem facing Bhutan
+- The proposed solution
+- The system architecture
+- Which AI technologies are used
+- How the detection works
+- How multimodal AI adds value
+- How auditors can use the findings
+- What data is required
+- The current system's limitations
+- Future opportunities for real-world adoption
+
+---
+
+# 22. TESTING AND QUALITY ASSURANCE
+
+Implement automated tests for:
+
+- Image processing
+- YOLO inference integration
+- Invalid file handling
+- Video frame extraction
+- Session state management
+- Risk classification
+- Audit criteria extraction
+- Groq integration
+- API failure handling
+- Report generation
+- Bhutan location validation
+- Evidence linking
+- Session export
+
+Provide real test results only for tests actually executed.
+
+Clearly report:
+- Passing tests
+- Failing tests
+- Untested functionality
+- Missing model weights
+- External dependencies
+- Known limitations
+
+Never invent a successful test result.
+
+---
+
+# 23. IMPLEMENTATION ORDER
+
+Build the application systematically.
+
+### Phase 1 — Foundation
+Create the runnable Streamlit application, professional interface, configuration, navigation, session manager and file handling.
+
+### Phase 2 — Computer Vision
+Implement OpenCV processing, genuine YOLO model inference, annotations, and detection results.
+
+### Phase 3 — Custom Road Damage Detection
+Prepare RDD2022, provide training and evaluation scripts, and integrate specialized road damage weights.
+
+### Phase 4 — Risk Assessment
+Implement transparent risk scoring and optional genuinely trained ML prediction.
+
+### Phase 5 — Groq Multimodal AI
+Implement image understanding, grounded explanations, structured analysis, and reliable failure handling.
+
+### Phase 6 — Infrastructure Audit
+Implement criteria upload, document extraction, evidence comparison, 5C findings, and auditor review.
+
+### Phase 7 — Bhutan Mapping and Analytics
+Implement location visualization and live session-based analytics.
+
+### Phase 8 — Reporting and Export
+Implement professional PDF, DOCX, JSON, and evidence export.
+
+### Phase 9 — Final Polish
+Improve UI, test all major user workflows, optimize CPU performance, fix errors, and complete presentation documentation.
+
+At every phase, preserve previously working features.
+
+Do not introduce placeholders that silently masquerade as functioning modules.
+
+---
+
+# 24. GITHUB CODESPACES COMPATIBILITY
+
+Provide exact GitHub Codespaces installation and execution instructions.
+
+The application must launch using:
+
+streamlit run app.py --server.address 0.0.0.0 --server.port 8501
+
+Include:
+- Dependency installation
+- Python environment setup
+- GitHub Codespaces configuration
+- Environment variable setup
+- Model weight installation
+- Dataset preparation
+- Testing commands
+- Port forwarding instructions
+- Troubleshooting steps
+
+Ensure that the basic application can start without a Groq API key or custom YOLO weights.
+
+Clearly disclose which specialized capabilities are unavailable until their dependencies are installed.
+
+Do not require paid GPU services.
+
+---
+
+# 25. FINAL ACCEPTANCE CRITERIA
+
+Consider the application complete only when:
+
+1. Streamlit launches successfully.
+2. The professional dashboard is functional.
+3. Real image upload works.
+4. OpenCV processing works.
+5. YOLO inference runs with installed compatible weights.
+6. Specialized road damage classes use genuinely compatible weights.
+7. Detection results are displayed accurately.
+8. Session records can be created and managed.
+9. Risk scores are explainable.
+10. Groq integration works with valid configured models.
+11. Audit documents can be uploaded and processed.
+12. Audit criteria can be compared against inspection evidence.
+13. Draft audit observations can be generated.
+14. Auditors can review and edit findings.
+15. Bhutan map markers use verified supplied coordinates.
+16. Reports can be downloaded.
+17. The application operates without a persistent database.
+18. No separate demonstration mode exists.
+19. No fabricated incidents or evaluation results appear.
+20. Critical tests have been executed and results documented.
+21. The system can run in GitHub Codespaces.
+22. The overall interface is polished and consistent.
+23. The README contains complete setup instructions.
+24. The project is technically explainable to international participants.
+25. Limitations and dependencies are clearly disclosed.
+
+---
+
+# FINAL DIRECTIVE
+
+I do not want a basic student assignment.
+
+I want a professional, innovative, fully integrated, technically credible and internationally presentable capstone project that showcases everything learned during my two-week training in Artificial Intelligence, Machine Learning, Deep Learning, YOLO, Computer Vision, Multimodal AI and Generative AI.
+
+I want this project to have meaningful potential for improving road infrastructure monitoring, road safety and public-sector auditing in Bhutan.
+
+Prioritize real functionality over the number of features.
+
+Use free resources wherever feasible.
+
+Do not fabricate AI outputs.
+
+Do not use a database.
+
+Do not create a separate demonstration mode.
+
+Use Groq for generative and multimodal analysis.
+
+Use real YOLO inference for supported road damage classes.
+
+Make the system compatible with GitHub Codespaces.
+
+Build the actual application, not only the design.
+
+If your environment supports file creation, create complete project files.
+
+If your environment only supports code generation, produce a properly structured and complete Python repository that can be transferred to GitHub Codespaces.
+
+Never misrepresent a browser-only mockup as the completed Python system.
+
+**START IMPLEMENTING THE PROJECT NOW.**
+
+First establish the repository architecture, then generate a complete runnable application foundation, and continue integrating the AI modules according to the implementation phases.
+
+Do not stop at providing a roadmap. Produce executable code, configuration files, tests, documentation, and a working application.

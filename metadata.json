@@ -1,0 +1,6 @@
+{
+  "name": "RoadSentry AI",
+  "description": "Intelligent Road Safety & Infrastructure Audit Intelligence Platform for the Kingdom of Bhutan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

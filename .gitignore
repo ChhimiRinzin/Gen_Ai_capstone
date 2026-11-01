@@ -1,0 +1,30 @@
+# Node dependencies & builds
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+*.log
+
+# Environment variables (Keep .env.example public, ignore secret local envs)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# Vercel deployment artifacts
+.vercel/
+
+# Python & testing cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/
+
+# System files
+.DS_Store
+Thumbs.db
