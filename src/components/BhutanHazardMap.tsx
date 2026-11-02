@@ -35,10 +35,9 @@ export const BhutanHazardMap: React.FC<BhutanHazardMapProps> = ({
       maxZoom: 16
     });
 
-    // Dark styled OpenStreetMap tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-      subdomains: 'abcd',
+    // OpenStreetMap-hosted tiles do not require an API key
+    L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
       maxZoom: 19
     }).addTo(map);
 

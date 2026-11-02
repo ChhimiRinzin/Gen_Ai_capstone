@@ -2,7 +2,7 @@ import { Detection, DamageClassCode } from '../types';
 import { DAMAGE_CLASS_NAMES } from './cvEngine';
 
 export interface InferenceDiagnostics {
-  modelStatus: 'onnx_ready' | 'onnx_loading' | 'cv_fallback' | 'error';
+  modelStatus: 'onnx_ready' | 'onnx_loading' | 'cv_fallback' | 'scenario_demo' | 'error';
   modelFilename: string;
   activeProvider: string;
   supportedClasses: string[];
@@ -26,6 +26,7 @@ export interface InferenceResult {
 let onnxSession: any = null;
 let sessionLoadingPromise: Promise<any> | null = null;
 let ortModule: any = null;
+const MODEL_FILENAME = 'pothole_yolov8n.onnx';
 
 /**
  * Attempt to load ONNX Runtime Web dynamically (prevents SSR crash)
@@ -52,7 +53,7 @@ async function getOrt(): Promise<any> {
 /**
  * Initialize or retrieve cached ONNX inference session
  */
-export async function getOrLoadOnnxSession(modelUrl = '/models/road_damage_yolov8n.onnx'): Promise<any> {
+export async function getOrLoadOnnxSession(modelUrl = `/models/${MODEL_FILENAME}`): Promise<any> {
   if (onnxSession) return onnxSession;
   if (sessionLoadingPromise) return sessionLoadingPromise;
 
@@ -96,7 +97,7 @@ export function detectDefectsUsingComputerVision(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  confThreshold = 0.35,
+  confThreshold = 0.25,
   iouThreshold = 0.45
 ): { detections: Detection[]; rawCount: number; aboveThreshCount: number } {
   const imgData = ctx.getImageData(0, 0, width, height);
@@ -284,7 +285,7 @@ function calculateIoU(boxA: [number, number, number, number], boxB: [number, num
  */
 export async function executeYoloPotholeInference(
   canvas: HTMLCanvasElement,
-  confThreshold = 0.35,
+  confThreshold = 0.25,
   iouThreshold = 0.45
 ): Promise<InferenceResult> {
   const startTime = performance.now();
@@ -292,14 +293,14 @@ export async function executeYoloPotholeInference(
   const height = canvas.height || 480;
   const ctx = canvas.getContext('2d');
 
-  const supportedClasses = ['D00 (Longitudinal)', 'D10 (Transverse)', 'D20 (Alligator)', 'D40 (Pothole)'];
+  const supportedClasses = ['D40 (Pothole)'];
 
   if (!ctx) {
     return {
       detections: [],
       diagnostics: {
         modelStatus: 'error',
-        modelFilename: 'road_damage_yolov8n.onnx',
+        modelFilename: MODEL_FILENAME,
         activeProvider: 'None',
         supportedClasses,
         inferenceDurationMs: 0,
@@ -371,16 +372,27 @@ export async function executeYoloPotholeInference(
       const outputTensor = outputMap[onnx.outputNames[0]];
       const infDuration = Math.round(performance.now() - infStart);
 
-      // Decode YOLOv8 output tensor [1, num_classes + 4, 8400]
-      // For 4 RDD classes: shape is [1, 8, 8400]
+      // YOLOv8 segmentation exports append mask coefficients to the class scores.
       const dims = outputTensor.dims;
       const outData: Float32Array = outputTensor.data as Float32Array;
+      if (dims.length !== 3) throw new Error(`Unexpected YOLO output shape: ${dims.join('x')}`);
 
-      const numChannels = dims[1]; // e.g. 8
-      const numAnchors = dims[2];  // e.g. 8400
-      const numClasses = numChannels - 4;
+      const channelsFirst = dims[1] < dims[2];
+      const numChannels = channelsFirst ? dims[1] : dims[2];
+      const numAnchors = channelsFirst ? dims[2] : dims[1];
+      const maskTensor = onnx.outputNames
+        .map((name: string) => outputMap[name])
+        .find((output: any) => output?.dims?.length === 4);
+      const maskChannels = maskTensor?.dims?.[1] ?? 0;
+      const numClasses = numChannels - 4 - maskChannels;
+      if (numClasses < 1) throw new Error(`Could not determine YOLO class count from output shape ${dims.join('x')}`);
 
-      const classCodeMap: DamageClassCode[] = ['D00', 'D10', 'D20', 'D40'];
+      const classCodeMap: DamageClassCode[] = numClasses === 1
+        ? ['D40']
+        : ['D00', 'D10', 'D20', 'D40'];
+      const valueAt = (channel: number, anchor: number) => channelsFirst
+        ? outData[channel * numAnchors + anchor]
+        : outData[anchor * numChannels + channel];
       const rawCandidates: Array<{ bbox: [number, number, number, number]; confidence: number; class_code: DamageClassCode; class_name: string }> = [];
 
       for (let a = 0; a < numAnchors; a++) {
@@ -388,7 +400,7 @@ export async function executeYoloPotholeInference(
         let bestClassIdx = 0;
 
         for (let c = 0; c < numClasses; c++) {
-          const score = outData[(4 + c) * numAnchors + a];
+          const score = valueAt(4 + c, a);
           if (score > maxClassScore) {
             maxClassScore = score;
             bestClassIdx = c;
@@ -396,16 +408,19 @@ export async function executeYoloPotholeInference(
         }
 
         if (maxClassScore >= confThreshold) {
-          const cx = outData[0 * numAnchors + a];
-          const cy = outData[1 * numAnchors + a];
-          const bw = outData[2 * numAnchors + a];
-          const bh = outData[3 * numAnchors + a];
+          const cx = valueAt(0, a);
+          const cy = valueAt(1, a);
+          const bw = valueAt(2, a);
+          const bh = valueAt(3, a);
 
-          // Unletterbox back to original image coordinates
-          const origX1 = Math.max(0, (cx - bw / 2 - padX) / scale);
-          const origY1 = Math.max(0, (cy - bh / 2 - padY) / scale);
-          const origX2 = Math.min(width, (cx + bw / 2 - padX) / scale);
-          const origY2 = Math.min(height, (cy + bh / 2 - padY) / scale);
+          // Invert the rounded canvas resize dimensions used by drawImage.
+          const scaleX = newW / width;
+          const scaleY = newH / height;
+          const origX1 = Math.max(0, (cx - bw / 2 - padX) / scaleX);
+          const origY1 = Math.max(0, (cy - bh / 2 - padY) / scaleY);
+          const origX2 = Math.min(width, (cx + bw / 2 - padX) / scaleX);
+          const origY2 = Math.min(height, (cy + bh / 2 - padY) / scaleY);
+          if (origX2 <= origX1 || origY2 <= origY1) continue;
 
           const classCode = classCodeMap[bestClassIdx] || 'D40';
           rawCandidates.push({
@@ -423,9 +438,9 @@ export async function executeYoloPotholeInference(
         detections: finalDetections,
         diagnostics: {
           modelStatus: 'onnx_ready',
-          modelFilename: 'road_damage_yolov8n.onnx',
+          modelFilename: MODEL_FILENAME,
           activeProvider: 'WebAssembly (ONNX Runtime Web)',
-          supportedClasses,
+          supportedClasses: numClasses === 1 ? ['D40 (Pothole)'] : supportedClasses,
           inferenceDurationMs: infDuration,
           preprocessDurationMs: preprocessDuration,
           rawCandidatesCount: numAnchors,
@@ -450,7 +465,7 @@ export async function executeYoloPotholeInference(
     detections: cvResult.detections,
     diagnostics: {
       modelStatus: 'cv_fallback',
-      modelFilename: 'road_damage_yolov8n.onnx (Awaiting weights in /models)',
+      modelFilename: `${MODEL_FILENAME} (unavailable; using CV fallback)`,
       activeProvider: 'OpenCV / HTML5 Canvas Cavity Analysis Engine',
       supportedClasses,
       inferenceDurationMs: totalDuration,

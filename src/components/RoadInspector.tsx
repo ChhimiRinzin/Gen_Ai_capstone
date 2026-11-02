@@ -2,18 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Upload,
   Check,
-  AlertTriangle,
-  ZoomIn,
   Sparkles,
   Layers,
-  MapPin,
   Save,
-  HelpCircle,
-  Eye,
-  Sliders,
-  Maximize2,
-  Cpu,
-  Activity,
   RefreshCw
 } from 'lucide-react';
 import { Inspection, Detection, CVMetrics, RiskAssessment } from '../types';
@@ -55,7 +46,7 @@ export const RoadInspector: React.FC<RoadInspectorProps> = ({
   const [drainageBlocked, setDrainageBlocked] = useState<boolean>(BHUTAN_TEST_SCENARIOS[0].drainage_blocked);
 
   // Inspector Options
-  const [confThreshold, setConfThreshold] = useState<number>(0.35);
+  const [confThreshold, setConfThreshold] = useState<number>(0.25);
   const [activeTab, setActiveTab] = useState<'annotated' | 'raw' | 'edges'>('annotated');
   const [selectedDetectionCrop, setSelectedDetectionCrop] = useState<Detection | null>(null);
   const [groqAnalysis, setGroqAnalysis] = useState<string | null>(null);
@@ -76,18 +67,18 @@ export const RoadInspector: React.FC<RoadInspectorProps> = ({
   const [isCustomUpload, setIsCustomUpload] = useState<boolean>(false);
   const [isInferring, setIsInferring] = useState<boolean>(false);
   const [inferenceDiagnostics, setInferenceDiagnostics] = useState<InferenceDiagnostics>({
-    modelStatus: 'onnx_ready',
-    modelFilename: 'road_damage_yolov8n.onnx',
+    modelStatus: 'onnx_loading',
+    modelFilename: 'pothole_yolov8n.onnx',
     activeProvider: 'WebAssembly (ONNX Runtime Web)',
-    supportedClasses: ['D00 (Longitudinal)', 'D10 (Transverse)', 'D20 (Alligator)', 'D40 (Pothole)'],
+    supportedClasses: ['D40 (Pothole)'],
     inferenceDurationMs: 14,
     preprocessDurationMs: 6,
     rawCandidatesCount: 8400,
     candidatesAboveThreshold: 4,
     finalPredictionsCount: 2,
-    confidenceThreshold: 0.35,
+    confidenceThreshold: 0.25,
     iouThreshold: 0.45,
-    message: 'Pipeline ready. Select a scenario or upload your road imagery for automated pothole detection.'
+    message: 'Choose a scenario or upload a road image.'
   });
 
   // Handle Scenario change
@@ -253,18 +244,18 @@ export const RoadInspector: React.FC<RoadInspectorProps> = ({
 
     // Update Diagnostics for Scenario
     setInferenceDiagnostics({
-      modelStatus: 'onnx_ready',
-      modelFilename: 'road_damage_yolov8n.onnx',
-      activeProvider: 'WebAssembly (ONNX Runtime Web)',
+      modelStatus: 'scenario_demo',
+      modelFilename: 'Scenario ground truth',
+      activeProvider: 'Local scenario benchmark',
       supportedClasses: ['D00 (Longitudinal)', 'D10 (Transverse)', 'D20 (Alligator)', 'D40 (Pothole)'],
-      inferenceDurationMs: 16,
-      preprocessDurationMs: 5,
-      rawCandidatesCount: 8400,
+      inferenceDurationMs: 0,
+      preprocessDurationMs: 0,
+      rawCandidatesCount: selectedScenario.ground_truth_detections.length,
       candidatesAboveThreshold: selectedScenario.ground_truth_detections.length,
       finalPredictionsCount: filteredDets.length,
       confidenceThreshold: confThreshold,
       iouThreshold: 0.45,
-      message: `Scenario benchmark loaded. ${filteredDets.length} damage instances verified at ${(confThreshold * 100).toFixed(0)}% confidence threshold.`
+      message: `Demo scenario: ${filteredDets.length} reference detections at ${(confThreshold * 100).toFixed(0)}% confidence.`
     });
   }, [selectedScenario, confThreshold, selectedRoadClass, selectedDzongkhag, isMonsoon, drainageBlocked, isCustomUpload]);
 
@@ -277,19 +268,25 @@ export const RoadInspector: React.FC<RoadInspectorProps> = ({
     const url = URL.createObjectURL(file);
     img.onload = () => {
       if (rawCanvasRef.current) {
+        const maxDimension = 640;
+        const resizeScale = Math.min(1, maxDimension / Math.max(img.naturalWidth, img.naturalHeight));
+        const width = Math.max(1, Math.round(img.naturalWidth * resizeScale));
+        const height = Math.max(1, Math.round(img.naturalHeight * resizeScale));
+        rawCanvasRef.current.width = width;
+        rawCanvasRef.current.height = height;
         const ctx = rawCanvasRef.current.getContext('2d');
         if (ctx) {
-          rawCanvasRef.current.width = 640;
-          rawCanvasRef.current.height = 480;
-          ctx.drawImage(img, 0, 0, 640, 480);
-          const metrics = analyzeCanvasQuality(ctx, 640, 480);
+          ctx.drawImage(img, 0, 0, width, height);
+          const metrics = analyzeCanvasQuality(ctx, width, height);
           setCvMetrics(metrics);
 
           setIsCustomUpload(true);
           runInferenceOnUploadedImage(confThreshold);
         }
       }
+      URL.revokeObjectURL(url);
     };
+    img.onerror = () => URL.revokeObjectURL(url);
     img.src = url;
   };
 
@@ -390,10 +387,10 @@ export const RoadInspector: React.FC<RoadInspectorProps> = ({
         <div>
           <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-            AI Road Inspector — Deep Learning Vision & Pavement Triage
+            Road Inspection
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Real OpenCV deterministic quality scoring, Ultralytics YOLO inference, and explainable multi-factor risk categorization.
+            Upload a road image or select a Bhutan demo scenario.
           </p>
         </div>
 
@@ -471,7 +468,7 @@ export const RoadInspector: React.FC<RoadInspectorProps> = ({
 
         <div>
           <label className="block text-slate-400 font-medium mb-1">
-            YOLO Confidence ({Math.round(confThreshold * 100)}%)
+            Detection Confidence ({Math.round(confThreshold * 100)}%)
           </label>
           <input
             type="range"
@@ -578,107 +575,38 @@ export const RoadInspector: React.FC<RoadInspectorProps> = ({
               </div>
             )}
 
-            {/* YOLO & ONNX Detection Diagnostics & Troubleshooting Panel */}
             {inferenceDiagnostics && (
-              <div className="p-3.5 rounded-lg bg-slate-950/90 border border-slate-800 space-y-2.5 text-xs">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Cpu className="w-4 h-4 text-cyan-400" />
-                    <span className="font-bold text-slate-200 uppercase tracking-wider text-[11px]">
-                      YOLO Pothole & Road Damage Pipeline Diagnostics
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {inferenceDiagnostics.modelStatus === 'onnx_ready' ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/80 flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        ONNX WebAssembly Active
-                      </span>
-                    ) : inferenceDiagnostics.modelStatus === 'cv_fallback' ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-700/80 flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                        CV Cavity Engine (ONNX Pending)
-                      </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-950 text-rose-300 border border-rose-700/80">
-                        Diagnostics Alert
-                      </span>
-                    )}
-
-                    {isCustomUpload && (
-                      <button
-                        onClick={() => runInferenceOnUploadedImage(confThreshold)}
-                        disabled={isInferring}
-                        title="Re-run inference on current frame"
-                        className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 text-[10px] flex items-center gap-1 font-semibold transition-colors"
-                      >
-                        <RefreshCw className={`w-3 h-3 ${isInferring ? 'animate-spin' : ''}`} />
-                        {isInferring ? 'Inferring...' : 'Re-run'}
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                {/* 4-cell diagnostic telemetry */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-mono">
-                  <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                    <span className="text-[10px] text-slate-400 block uppercase">Target Model</span>
-                    <span className="font-bold text-slate-200 text-[11px] truncate block" title={inferenceDiagnostics.modelFilename}>
-                      road_damage_yolov8n.onnx
-                    </span>
-                    <span className="text-[9px] text-slate-500 font-sans block mt-0.5">RDD2022 Schema</span>
-                  </div>
-
-                  <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                    <span className="text-[10px] text-slate-400 block uppercase">Execution Engine</span>
-                    <span className="font-bold text-cyan-300 text-[11px] truncate block" title={inferenceDiagnostics.activeProvider}>
-                      {inferenceDiagnostics.activeProvider.split(' ')[0]}
-                    </span>
-                    <span className="text-[9px] text-slate-500 font-sans block mt-0.5">Zero-Server Overhead</span>
-                  </div>
-
-                  <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                    <span className="text-[10px] text-slate-400 block uppercase">Inference Time</span>
-                    <span className="font-bold text-teal-300 text-[11px] block">
-                      {inferenceDiagnostics.inferenceDurationMs} ms
-                    </span>
-                    <span className="text-[9px] text-slate-500 font-sans block mt-0.5">Prep: {inferenceDiagnostics.preprocessDurationMs} ms</span>
-                  </div>
-
-                  <div className="p-2 rounded bg-slate-900 border border-slate-800">
-                    <span className="text-[10px] text-slate-400 block uppercase">Candidate Pipeline</span>
-                    <span className="font-bold text-slate-200 text-[11px] block">
-                      {inferenceDiagnostics.rawCandidatesCount} → {inferenceDiagnostics.finalPredictionsCount}
-                    </span>
-                    <span className="text-[9px] text-slate-500 font-sans block mt-0.5">NMS IoU: 0.45</span>
-                  </div>
-                </div>
-
-                {/* Supported Classes */}
-                <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                  <span className="text-[10px] text-slate-400 uppercase font-semibold mr-1">Trained Classes:</span>
-                  <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-rose-800/60 text-rose-300 text-[10px] font-mono">
-                    D00: Longitudinal
+              <div className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg bg-slate-950/70 border border-slate-800 text-xs">
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full shrink-0 ${
+                    inferenceDiagnostics.modelStatus === 'onnx_ready' ? 'bg-emerald-400' :
+                    inferenceDiagnostics.modelStatus === 'cv_fallback' ? 'bg-amber-400' :
+                    inferenceDiagnostics.modelStatus === 'error' ? 'bg-rose-400' : 'bg-slate-500'
+                  }`} />
+                  <span className="font-semibold text-slate-200 truncate">
+                    {inferenceDiagnostics.modelStatus === 'scenario_demo' ? 'Demo scenario' :
+                      inferenceDiagnostics.modelStatus === 'onnx_ready' ? 'Pothole model' :
+                      inferenceDiagnostics.modelStatus === 'cv_fallback' ? 'CV fallback' :
+                      inferenceDiagnostics.modelStatus === 'error' ? 'Detection error' : 'Loading model'}
                   </span>
-                  <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-amber-800/60 text-amber-300 text-[10px] font-mono">
-                    D10: Transverse
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded bg-slate-900 border border-yellow-800/60 text-yellow-300 text-[10px] font-mono">
-                    D20: Alligator
-                  </span>
-                  <span className="px-1.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-600/60 text-cyan-300 text-[10px] font-mono font-bold">
-                    D40: Pothole
+                  <span className="text-slate-400 whitespace-nowrap">
+                    {activeDetections.length} {activeDetections.length === 1 ? 'detection' : 'detections'}
                   </span>
                 </div>
-
-                {/* Diagnostics Log Message */}
-                {inferenceDiagnostics.message && (
-                  <div className="p-2 rounded bg-slate-900/60 border border-slate-800/80 text-[11px] text-slate-300 flex items-start gap-1.5">
-                    <Activity className="w-3.5 h-3.5 text-cyan-400 mt-0.5 shrink-0" />
-                    <span>{inferenceDiagnostics.message}</span>
-                  </div>
-                )}
+                <div className="flex shrink-0 items-center gap-3 text-slate-400">
+                  {inferenceDiagnostics.modelStatus === 'onnx_ready' && <span>{inferenceDiagnostics.inferenceDurationMs} ms</span>}
+                  {isCustomUpload && (
+                    <button
+                      onClick={() => runInferenceOnUploadedImage(confThreshold)}
+                      disabled={isInferring}
+                      title="Run detection again"
+                      aria-label="Run detection again"
+                      className="p-1 text-cyan-400 hover:text-cyan-300 disabled:opacity-50"
+                    >
+                      <RefreshCw className={`w-4 h-4 ${isInferring ? 'animate-spin' : ''}`} />
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </div>
